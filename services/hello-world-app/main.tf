@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.0"
-    }
-  }
-}
-
 module "asg" {
   source = "../../cluster/asg-rolling-deploy"
 
@@ -21,7 +12,7 @@ module "asg" {
   min_size      = var.min_size
   instance_type = var.instance_type
 
-  subnet_ids = data.aws_subnets.default.ids
+  subnet_ids = local.subnet_ids
 
   target_group_arns = [aws_lb_target_group.asg.arn]
   health_check_type = "ELB"
@@ -32,7 +23,7 @@ module "asg" {
 module "alb" {
   source     = "../../networking/alb"
   alb_name   = "hello-world-${var.environment}"
-  subnet_ids = data.aws_subnets.default.ids
+  subnet_ids = local.subnet_ids
 }
 
 resource "aws_lb_listener_rule" "asg" {
@@ -57,7 +48,7 @@ resource "aws_lb_target_group" "asg" {
 
   port     = var.server_port
   protocol = "HTTP"
-  vpc_id   = data.aws_vpc.default.id
+  vpc_id   = local.vpc_id
 
   health_check {
     path                = "/"
