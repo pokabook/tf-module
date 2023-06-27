@@ -5,6 +5,8 @@ module "asg" {
   ami          = var.ami
   user_data = templatefile("${path.module}/user-data.sh", {
     server_port = var.server_port
+    db_address  = var.mysql_config.address
+    db_port     = var.mysql_config.port
   })
   enable_autoscaling = var.enable_autoscaling
 

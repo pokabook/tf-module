@@ -48,7 +48,7 @@ variable "server_text" {
 variable "server_port" {
   description = "The port the server will use for HTTP requests"
   type        = number
-  default     = 80
+  default     = 8080
 }
 
 variable "custom_tags" {
